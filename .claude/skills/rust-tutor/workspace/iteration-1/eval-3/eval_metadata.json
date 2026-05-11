@@ -1,0 +1,13 @@
+{
+  "eval_id": 3,
+  "eval_name": "trait-vs-interface",
+  "prompt": "我在 Java 里经常用 interface，听说 Rust 有个 trait 和它有点像？但又听说 trait 能做 interface 做不了的事。它们到底有什么区别？",
+  "assertions": [
+    "使用了 Java interface 作为教学锚点",
+    "展示了 Rust trait 和 Java interface 的代码对比示例",
+    "涵盖了 trait 的独特功能（关联类型、trait bound、为外部类型实现 trait 之一）",
+    "包含了一个让用户动手的练习",
+    "教学语言使用中文",
+    "解释了 trait 和 interface 在哲学层面的区别（行为共享 vs 契约约定）"
+  ]
+}

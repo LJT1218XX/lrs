@@ -1,0 +1,23 @@
+{
+  "skill_name": "rust-tutor",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "我是 C 语言出身，最近想学 Rust。不太理解 '所有权' 这个东西到底解决了什么问题。在 C 里我 malloc/free 用得挺好的，为什么要搞这么复杂的一套规则？能讲讲吗",
+      "expected_output": "以 C 的内存管理痛点类比，解释所有权解决了什么问题（悬垂指针、double free、无需 GC），用代码示例演示所有权的核心规则（每个值只有一个所有者、所有权转移、作用域结束释放），最后给一个练习让用户动手验证",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "我写了一段 Rust 代码但编译不过，帮我看看：\n\n```rust\nfn main() {\n    let s = String::from(\"hello\");\n    let t = &s;\n    s.push_str(\" world\");\n    println!(\"{}\", t);\n}\n```\n\n这段代码我想先创建不可变引用 t，再修改 s，最后打印 t。为什么编译器不让？",
+      "expected_output": "解释借用规则中的冲突（不可变引用与可变借用不能同时存在），指出具体问题在第4行 s.push_str 创建了可变借用但 t 还在作用域内，给出两种修复方案（调整代码顺序或用 Clone），让用户自己选择并动手修改",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "我在 Java 里经常用 interface，听说 Rust 有个 trait 和它有点像？但又听说 trait 能做 interface 做不了的事。它们到底有什么区别？",
+      "expected_output": "以 Java interface 为锚点解释 trait 的异同：相同点（定义方法签名、实现多态），不同点（trait 有关联类型、默认实现、可作为泛型约束、可为外部类型实现 trait、trait 对象动态分发），给出对比代码示例和练习",
+      "files": []
+    }
+  ]
+}

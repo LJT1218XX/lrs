@@ -1,0 +1,54 @@
+{
+  "expectations": [
+    {
+      "text": "引用了 C 的 malloc/free 或手动内存管理作为类比锚点",
+      "passed": true,
+      "evidence": "开头引用 'malloc/free 用得挺好的'，并用 C 代码示例展示悬垂指针、double free 等痛点"
+    },
+    {
+      "text": "解释了所有权要解决的根本问题（悬垂指针、double free、无需 GC）",
+      "passed": true,
+      "evidence": "列出 C 的三大痛点：悬垂指针、double free/use-after-free、谁负责 free"
+    },
+    {
+      "text": "提到了所有权的三条核心规则（每个值只有一个所有者、所有权转移、作用域结束释放）",
+      "passed": true,
+      "evidence": "明确列出了 3 条规则并附带说明"
+    },
+    {
+      "text": "包含至少一个 Rust 代码示例",
+      "passed": true,
+      "evidence": "包含 3 个代码示例（所有权转移、借用、可变借用）"
+    },
+    {
+      "text": "包含一个让用户动手的练习",
+      "passed": true,
+      "evidence": "包含一个练习（预测代码能否编译）附带 4 个思考题"
+    },
+    {
+      "text": "教学语言使用中文",
+      "passed": true,
+      "evidence": "全文中文教学"
+    },
+    {
+      "text": "遵循'先 WHY 再 HOW'的教学顺序",
+      "passed": true,
+      "evidence": "先讲 WHY（所有权解决了什么问题），再讲 WHAT（三条规则），最后 HOW（代码示例和练习）"
+    },
+    {
+      "text": "提及了用户的 C 语言背景（来自学习档案）",
+      "passed": false,
+      "evidence": "提到了'面向有 C 语言基础的 Rust 初学者'但未引用个人学习档案，未提及用户的其他技术背景"
+    }
+  ],
+  "summary": {
+    "passed": 7,
+    "failed": 1,
+    "total": 8,
+    "pass_rate": 0.875
+  },
+  "timing": {
+    "executor_duration_seconds": 107.2,
+    "total_duration_seconds": 107.2
+  }
+}

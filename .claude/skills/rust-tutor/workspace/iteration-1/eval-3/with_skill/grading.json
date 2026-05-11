@@ -1,0 +1,44 @@
+{
+  "expectations": [
+    {
+      "text": "使用了 Java interface 作为教学锚点",
+      "passed": true,
+      "evidence": "开头从 Java interface 切入：'你从 Java 来，interface 是你熟悉的概念'"
+    },
+    {
+      "text": "展示了 Rust trait 和 Java interface 的代码对比示例",
+      "passed": true,
+      "evidence": "并列展示了 Speak interface（Java）和 Speak trait（Rust）的代码，以及默认方法的对比"
+    },
+    {
+      "text": "涵盖了 trait 的独特功能（关联类型、trait bound、为外部类型实现 trait 之一）",
+      "passed": true,
+      "evidence": "涵盖了全部三项：为外部类型实现 trait（i32 实现 CanJson）、trait bound（where 子句）、关联类型（Iterator::Item）"
+    },
+    {
+      "text": "包含了一个让用户动手的练习",
+      "passed": true,
+      "evidence": "提供了一个 Java Drawable interface → Rust 翻译练习，明确要求 '在 src/main.rs 里写'"
+    },
+    {
+      "text": "教学语言使用中文",
+      "passed": true,
+      "evidence": "全文中文教学"
+    },
+    {
+      "text": "解释了 trait 和 interface 在哲学层面的区别（行为共享 vs 契约约定）",
+      "passed": true,
+      "evidence": "解释了 trait 是'定义共享行为的方式'，Java interface 是'行为契约'，并指出 Orphan Rule 防止命名冲突的哲学差异"
+    }
+  ],
+  "summary": {
+    "passed": 6,
+    "failed": 0,
+    "total": 6,
+    "pass_rate": 1.0
+  },
+  "timing": {
+    "executor_duration_seconds": 89.9,
+    "total_duration_seconds": 89.9
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "eval_id": 2,
+  "eval_name": "borrow-checker-debug",
+  "prompt": "我写了一段 Rust 代码但编译不过，帮我看看：\n\n```rust\nfn main() {\n    let s = String::from(\"hello\");\n    let t = &s;\n    s.push_str(\" world\");\n    println!(\"{}\", t);\n}\n```\n\n这段代码我想先创建不可变引用 t，再修改 s，最后打印 t。为什么编译器不让？",
+  "assertions": [
+    "正确指出了错误原因（可变借用与不可变借用冲突）",
+    "指出了具体的出错行号（第4行 s.push_str）",
+    "解释了 Rust 的借用规则（一次只能有一个可变借用或多个不可变借用）",
+    "提供了至少 2 种不同的修复方案",
+    "修复方案中让用户自己选择并动手修改（不代劳）",
+    "教学语言使用中文",
+    "不使用过于简略的解释，深入说明了 WHY"
+  ]
+}

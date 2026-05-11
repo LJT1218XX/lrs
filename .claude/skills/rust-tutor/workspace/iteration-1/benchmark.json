@@ -1,0 +1,133 @@
+{
+  "metadata": {
+    "skill_name": "rust-tutor",
+    "skill_path": "e:/Code/Cursor/First_Rust/.claude/skills/rust-tutor",
+    "executor_model": "claude-opus-4-20250514",
+    "timestamp": "2026-05-10T21:00:00Z",
+    "evals_run": ["ownership-teaching", "borrow-checker-debug", "trait-vs-interface"],
+    "runs_per_configuration": 1
+  },
+  "runs": [
+    {
+      "eval_id": 1,
+      "eval_name": "ownership-teaching",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 8,
+        "failed": 0,
+        "total": 8,
+        "time_seconds": 139.2,
+        "tokens": 30510,
+        "tool_calls": 5,
+        "errors": 0
+      }
+    },
+    {
+      "eval_id": 1,
+      "eval_name": "ownership-teaching",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.875,
+        "passed": 7,
+        "failed": 1,
+        "total": 8,
+        "time_seconds": 107.2,
+        "tokens": 25928,
+        "tool_calls": 3,
+        "errors": 0
+      }
+    },
+    {
+      "eval_id": 2,
+      "eval_name": "borrow-checker-debug",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 7,
+        "failed": 0,
+        "total": 7,
+        "time_seconds": 62.7,
+        "tokens": 27341,
+        "tool_calls": 5,
+        "errors": 0
+      }
+    },
+    {
+      "eval_id": 2,
+      "eval_name": "borrow-checker-debug",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.857,
+        "passed": 6,
+        "failed": 1,
+        "total": 7,
+        "time_seconds": 58.7,
+        "tokens": 23119,
+        "tool_calls": 2,
+        "errors": 0
+      }
+    },
+    {
+      "eval_id": 3,
+      "eval_name": "trait-vs-interface",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 6,
+        "failed": 0,
+        "total": 6,
+        "time_seconds": 89.9,
+        "tokens": 27499,
+        "tool_calls": 6,
+        "errors": 0
+      }
+    },
+    {
+      "eval_id": 3,
+      "eval_name": "trait-vs-interface",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.833,
+        "passed": 5,
+        "failed": 1,
+        "total": 6,
+        "time_seconds": 52.8,
+        "tokens": 23807,
+        "tool_calls": 3,
+        "errors": 0
+      }
+    }
+  ],
+  "run_summary": {
+    "with_skill": {
+      "pass_rate": { "mean": 1.0, "stddev": 0.0, "min": 1.0, "max": 1.0 },
+      "time_seconds": { "mean": 97.3, "stddev": 38.6, "min": 62.7, "max": 139.2 },
+      "tokens": { "mean": 28450, "stddev": 1810, "min": 27341, "max": 30510 }
+    },
+    "without_skill": {
+      "pass_rate": { "mean": 0.855, "stddev": 0.021, "min": 0.833, "max": 0.875 },
+      "time_seconds": { "mean": 72.9, "stddev": 29.5, "min": 52.8, "max": 107.2 },
+      "tokens": { "mean": 24285, "stddev": 1409, "min": 23119, "max": 25928 }
+    },
+    "delta": {
+      "pass_rate": "+0.145",
+      "time_seconds": "+24.4",
+      "tokens": "+4165"
+    }
+  },
+  "notes": [
+    "with_skill 在全部 3 个测试中均获得 100% 通过率，without_skill 平均 85.5%",
+    "with_skill 在所有断言上都通过，特别是在个性化教学（引用学习档案、让用户动手）方面明显优于基线",
+    "with_skill 教学输出更详细（平均 4494 chars vs 3208 chars），更多的代码示例和练习",
+    "with_skill 用时更长（+24.4s），因为它执行了更多步骤（读取学习档案、规划教学步骤）",
+    "3 个测试的断言设计良好——每个测试都有至少 1 个区分性断言（with_skill 通过而 without_skill 未通过）",
+    "eval-2（借用检查器纠错）中 without_skill 虽也提供了修复方案，但未遵循'让用户自己动手'的教学原则"
+  ]
+}
