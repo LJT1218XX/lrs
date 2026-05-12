@@ -90,7 +90,42 @@ match meta.modified() {
 - 提取后的 `time` 默认不可变，调 `elapsed()` 只需 `&self`（只读），无需 `mut`
 - `match` 必须穷举 `Ok` 和 `Err` 两个分支
 
-## 阶段 5：`-a` 显示隐藏文件
+## 阶段 7：用 clap 管理命令行参数
+
+引入第三方 crate（Rust 的依赖库），替代手动 `args.contains()`。
+
+**Cargo.toml 新增依赖：**
+```toml
+[dependencies]
+clap = { version = "4", features = ["derive"] }
+```
+
+**代码替换：**
+```rust
+use clap::Parser;                    // 引入 clap
+
+#[derive(Parser)]                    // 自动生成解析代码
+#[command(name = "lrs", version = "1.0", about = "简化版ls")]
+struct Args {
+    /// 长格式显示（文件类型、修改时间） // /// 注释 = --help 描述
+    #[arg(short = 'l')]               // 声明短参数名
+    long: bool,
+
+    /// 显示隐藏文件（以 . 开头）
+    #[arg(short = 'a')]
+    all: bool,
+}
+
+let args = Args::parse();            // 一行代替所有手动解析
+let long_format = args.long;         // 通过字段名访问
+let show_all = args.all;
+```
+
+**clap 带来的好处：**
+- 自动处理 `-la` 合并写法
+- 自动生成 `--help`（从 `///` 注释提取描述）
+- 自动校验非法参数并报错
+- `#[derive(Parser)]` — 编译期宏，零运行时开销
 
 ```rust
 let show_all = args.contains(&"-a".to_string());

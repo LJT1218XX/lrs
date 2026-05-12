@@ -1,10 +1,28 @@
-use std::env;
+
 use std::fs;
+use clap::Parser;//要用的是什么
+
+
+#[derive(Parser)] //什么作用
+#[command(name = "lrs", version = "1.0", about = "简化版ls")] //这是什么意思
+struct Args {
+    ///显示文件类型，修改时间
+    #[arg(short = 'l')]//这是什么作用
+    long: bool,
+
+    ///显示隐藏文件
+    #[arg(short = 'a')]
+    all: bool,
+}
 
 fn main() -> std::io::Result<()> {
-    let args: Vec<String> = env::args().collect();
-    let long_format = args.contains(&"-l".to_string());
-    let show_all = args.contains(&"-a".to_string());
+    //let args: Vec<String> = env::args().collect();
+    //let long_format = args.contains(&"-l".to_string());
+    //let show_all = args.contains(&"-a".to_string());
+    let args = Args::parse();
+    let long_format = args.long;
+    let show_all = args.all;
+    
 
     let mut entries = Vec::new();
 
