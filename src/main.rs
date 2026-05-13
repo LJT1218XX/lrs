@@ -12,15 +12,20 @@ struct Args {
     ///显示隐藏文件
     #[arg(short = 'a')]
     all: bool,
+
+    ///指定目录路径
+    path: Option<String>
 }
 
 fn main() -> std::io::Result<()> {
     let args = Args::parse();
     let long_format = args.long;
     let show_all = args.all;
+    let dir= args.path.unwrap_or_else(|| ".".to_string());
+
     let mut entries = Vec::new();
 
-    for entry in fs::read_dir(".")? {
+    for entry in fs::read_dir(&dir)? {
         let entry = entry?;
         let meta = entry.metadata()?;
         let path = entry.path();
@@ -63,10 +68,18 @@ fn main() -> std::io::Result<()> {
         };
 
         let display_name = if file_type.is_dir() {
-            filename.blue().to_string()
+            filename.blue()
+        } else if file_type.is_symlink(){
+            filename.cyan()
+        } else if ext_in(&filename, &[".exe", "bat", "com", "cmd"]) {
+            filename.green()
+        } else if ext_in(&filename, &[".png", ".jpg", ".jpeg", ".gif", ".bmp", ".webp", ".svg", ".ico"]) {
+            filename.magenta()
+        } else if ext_in(&filename, &[".mp3", ".wav", ".flac", ".aac", ".ogg", ".m4a"]) {
+            filename.yellow()
         } else {
-            filename.normal().to_string()
-        };
+            filename.normal()
+        }.to_string();
 
         if long_format {
             let mtime = match meta.modified() {
@@ -120,4 +133,8 @@ fn format_size(size: u64) -> String {
         size /= 1024.0;
     }
     format!("{:.1} TiB", size)
+}
+
+fn ext_in(name: &str, exts: &[&str]) -> bool {
+    exts.iter().any(|ext| name.ends_with(ext))
 }
