@@ -13,6 +13,10 @@ struct Args {
     #[arg(short = 'a')]
     all: bool,
 
+    ///递归显示子目录
+    #[arg(short = 'R')]
+    recursive: bool,
+
     ///指定目录路径
     path: Option<String>
 }
@@ -71,7 +75,7 @@ fn main() -> std::io::Result<()> {
             filename.blue()
         } else if file_type.is_symlink(){
             filename.cyan()
-        } else if ext_in(&filename, &[".exe", "bat", "com", "cmd"]) {
+        } else if ext_in(&filename, &[".exe", ".bat", ".com", ".cmd"]) {
             filename.green()
         } else if ext_in(&filename, &[".png", ".jpg", ".jpeg", ".gif", ".bmp", ".webp", ".svg", ".ico"]) {
             filename.magenta()
