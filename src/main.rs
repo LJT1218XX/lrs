@@ -1,13 +1,11 @@
-
+use clap::{Parser};
 use std::fs;
-use clap::Parser;//要用的是什么
 
-
-#[derive(Parser)] //什么作用
-#[command(name = "lrs", version = "1.0", about = "简化版ls")] //这是什么意思
+#[derive(Parser)]
+#[command(name = "lrs", version = "1.0", about = "简化版ls")]
 struct Args {
     ///显示文件类型，修改时间
-    #[arg(short = 'l')]//这是什么作用
+    #[arg(short = 'l')]
     long: bool,
 
     ///显示隐藏文件
@@ -16,21 +14,15 @@ struct Args {
 }
 
 fn main() -> std::io::Result<()> {
-    //let args: Vec<String> = env::args().collect();
-    //let long_format = args.contains(&"-l".to_string());
-    //let show_all = args.contains(&"-a".to_string());
     let args = Args::parse();
     let long_format = args.long;
     let show_all = args.all;
-    
-
     let mut entries = Vec::new();
 
     for entry in fs::read_dir(".")? {
         let entry = entry?;
         let meta = entry.metadata()?;
         let path = entry.path();
-
         let filename = path
             .file_name()
             .and_then(|s| s.to_str())
@@ -40,9 +32,7 @@ fn main() -> std::io::Result<()> {
         if !show_all && filename.starts_with('.') {
             continue;
         }
-
         let file_type = meta.file_type();
-
         let size = format_size(meta.len());
 
         entries.push((filename, size, file_type, meta));
@@ -54,6 +44,8 @@ fn main() -> std::io::Result<()> {
         .max()
         .unwrap_or(8);
 
+    entries.sort_by(|a, b| b.2.is_dir().cmp(&a.2.is_dir()).then(a.0.cmp(&b.0)));
+
     for (filename, size, file_type, meta) in &entries {
         let type_char = if file_type.is_dir() {
             'd'
@@ -61,6 +53,12 @@ fn main() -> std::io::Result<()> {
             'l'
         } else {
             '-'
+        };
+
+        let display_size = if file_type.is_dir() {
+            String::from("------")
+        } else {
+            size.clone()
         };
 
         if long_format {
@@ -84,7 +82,7 @@ fn main() -> std::io::Result<()> {
             println!(
                 "{}  {:>width$}  {:>8}  {}",
                 type_char,
-                size,
+                display_size,
                 mtime,
                 filename,
                 width = max_width
@@ -93,7 +91,7 @@ fn main() -> std::io::Result<()> {
             println!(
                 "{}  {:>width$}  {}",
                 type_char,
-                size,
+                display_size,
                 filename,
                 width = max_width
             );
@@ -102,14 +100,13 @@ fn main() -> std::io::Result<()> {
     Ok(())
 }
 
-
 fn format_size(size: u64) -> String {
-    const UNITS: &[&str] = &["B", "KiB", "MiB", "GiB", "TiB"]; //这里为何要加: &[&str]，是要将他们存入栈中吗
-    let mut size = size as f64;//为何要加as f64
+    const UNITS: &[&str] = &["B", "KiB", "MiB", "GiB", "TiB"];
+    let mut size = size as f64;
     for unit in UNITS {
         if size < 1024.0 {
-            if *unit == "B" {  //这里为何要在变量前加*
-                return format!("{:.0} {}", size, unit); //这里的{:.0}代表什么
+            if *unit == "B" {
+                return format!("{:.0} {}", size, unit);
             }
             return format!("{:.1} {}", size, unit);
         }
