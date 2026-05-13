@@ -1,5 +1,6 @@
 use clap::{Parser};
 use std::fs;
+use colored::Colorize;
 
 #[derive(Parser)]
 #[command(name = "lrs", version = "1.0", about = "简化版ls")]
@@ -61,6 +62,12 @@ fn main() -> std::io::Result<()> {
             size.clone()
         };
 
+        let display_name = if file_type.is_dir() {
+            filename.blue().to_string()
+        } else {
+            filename.normal().to_string()
+        };
+
         if long_format {
             let mtime = match meta.modified() {
                 Ok(time) => {
@@ -84,7 +91,7 @@ fn main() -> std::io::Result<()> {
                 type_char,
                 display_size,
                 mtime,
-                filename,
+                display_name,
                 width = max_width
             );
         } else {
@@ -92,7 +99,7 @@ fn main() -> std::io::Result<()> {
                 "{}  {:>width$}  {}",
                 type_char,
                 display_size,
-                filename,
+                display_name,
                 width = max_width
             );
         }
