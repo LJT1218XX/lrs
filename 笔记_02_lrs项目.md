@@ -90,7 +90,75 @@ match meta.modified() {
 - 提取后的 `time` 默认不可变，调 `elapsed()` 只需 `&self`（只读），无需 `mut`
 - `match` 必须穷举 `Ok` 和 `Err` 两个分支
 
-## 阶段 7：用 clap 管理命令行参数
+## 阶段 7：颜色输出
+
+**依赖：** `colored = "2"`
+
+```rust
+use colored::Colorize;
+
+let display_name = if file_type.is_dir() {
+    filename.blue()
+} else if file_type.is_symlink() {
+    filename.cyan()
+} else if ext_in(&filename, &[".exe", ".bat", ".com", ".cmd"]) {
+    filename.green()       // 可执行文件 → 绿
+} else if ext_in(&filename, &[".png", ".jpg", ".gif", ".svg", ".ico"]) {
+    filename.magenta()     // 图片 → 紫
+} else if ext_in(&filename, &[".mp3", ".wav", ".flac", ".aac", ".ogg", ".m4a"]) {
+    filename.yellow()      // 音频 → 黄
+} else {
+    filename.normal()
+}.to_string();
+```
+
+**辅助函数：**
+```rust
+fn ext_in(name: &str, exts: &[&str]) -> bool {
+    exts.iter().any(|ext| name.ends_with(ext))
+}
+```
+
+## 阶段 8：指定目录路径
+
+```rust
+struct Args {
+    ///指定目录路径
+    path: Option<String>
+}
+
+let dir = args.path.unwrap_or_else(|| ".".to_string());
+// 传给 read_dir
+for entry in fs::read_dir(&dir)? { ... }
+```
+
+## 阶段 9：递归 `-R`
+
+```rust
+fn list_dir(dir: &str, show_all: bool, long_format: bool, recursive: bool) -> std::io::Result<()> {
+    println!("{}:", dir);     // 先打印目录名
+    // ... 收集 entries、排序、打印 ...
+
+    // 打印完后统一处理子目录
+    if recursive {
+        for (filename, _size, file_type, _meta) in &entries {
+            if file_type.is_dir() && filename != "." && filename != ".." {
+                let sub_path = format!("{}/{}", dir.trim_end_matches('/'), filename);
+                println!();
+                list_dir(&sub_path, show_all, long_format, recursive)?;
+            }
+        }
+    }
+    Ok(())
+}
+```
+
+**递归要点：**
+- 递归代码必须在打印循环**之外**，否则子目录会被重复遍历多次
+- 要过滤 `.` 和 `..` 防止无限递归
+- 路径拼接用 `format!` 或 `PathBuf`
+
+## 阶段 10：用 clap 管理命令行参数
 
 引入第三方 crate（Rust 的依赖库），替代手动 `args.contains()`。
 

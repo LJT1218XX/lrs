@@ -7,3 +7,7 @@ edition = "2024"
 
 clap = {version = "4", features = ["derive"]}
 colored = "2"
+
+[[bin]]
+name = "warmup"
+path = "src/main_warmup.rs"

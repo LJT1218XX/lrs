@@ -264,51 +264,118 @@ fn main(){
 // struct Color(u8, u8, u8);
 
 
-    let file = FileItem::new("main.rs", 1024);
-    file.print_info();
+    // let file = FileItem::new("main.rs", 1024);
+    // file.print_info();
 
-    let mut file2 = FileItem::new("temp.txt", 512);
-    file2.resize(2048);
-    file2.print_info();
+    // let mut file2 = FileItem::new("temp.txt", 512);
+    // file2.resize(2048);
+    // file2.print_info();
 
-    let size = FileItem::max_size();
-    println!("单个文件最大支持: {} 字节", size);
+    // let size = FileItem::max_size();
+    // println!("单个文件最大支持: {} 字节", size);
 
-    let f = FileItem {
-        name: String::from("readme.md"),
-        size: 100,
-    }; //使用关联函数与这种形式都能对结构体初始化
-    f.print_info();
+    // let f = FileItem {
+    //     name: String::from("readme.md"),
+    //     size: 100,
+    // }; //使用关联函数与这种形式都能对结构体初始化
+    // f.print_info();
 
+    let light = TrafficLight::Red;
+
+    let action = match light {
+        TrafficLight::Red => "停",
+        TrafficLight::Yellow => "等",
+        TrafficLight::Green => "行",
+
+    };
+
+    println!("灯的状态: {}", action);
+
+    let home = IpAddr::V4(127, 0, 0, 1);
+    let loopback = IpAddr::V6(String::from("::1"));
+
+    let addr_desc = match home {
+        IpAddr::V4(a,b ,c ,d ) => format!("IPv4: {}.{}.{}.{}", a, b, c, d),
+        IpAddr::V6(s) => format!("IPv6: {}", s),
+    };
+
+    println!("{}", addr_desc);
+
+    let msg = Some(String::from("你好"));
+
+    if let Some(content) = msg {
+        println!("有消息：{}", content);
+    } else {
+        println!("没有消息");
+    }
+
+    let fruit = Fruit::Orange;
+
+    match fruit {
+        Fruit::Apple => {
+            println!("苹果")
+        },
+        Fruit::Orange => {
+            println!("橘子")
+        },
+    };
+
+    if let Fruit::Orange = fruit {
+        println!("是橘子");
+    } else {
+        println!("不是橘子")
+    }
+
+
+}
+
+
+#[derive(Debug)]
+enum TrafficLight {
+    Red,
+    Yellow,
+    Green,
+}
+
+#[derive(Debug)]
+enum IpAddr {
+    V4(u8, u8, u8, u8),
+    V6(String),
 
 }
 
 #[derive(Debug)]
-struct FileItem{
-    name: String,
-    size: u64,
+enum Fruit {
+    Apple,
+    Orange,
 }
 
-impl FileItem {
-   //关联函数
-   fn new(name: &str, size: u64) -> Self {
-    FileItem { name: String::from(name), size }
-   }//这个函数返回Self是因为类似于构造函数，调用过程中生成一个自己
+// #[derive(Debug)]
+// struct FileItem{
+//     name: String,
+//     size: u64,
+// }
 
-   //只读方法,所以传入不可变引用的自己
-   fn print_info(&self) {
-    println!("{} -- {}字节", self.name, self.size);
-   }
+// impl FileItem {
+//    //关联函数
+//    fn new(name: &str, size: u64) -> Self {
+//     FileItem { name: String::from(name), size }
+//    }//这个函数返回Self是因为类似于构造函数，调用过程中生成一个自己
 
-   //&mut self 修改自身
-   fn resize(&mut self, new_size: u64){
-    self.size = new_size;
-   }
+//    //只读方法,所以传入不可变引用的自己
+//    fn print_info(&self) {
+//     println!("{} -- {}字节", self.name, self.size);
+//    }
+
+//    //&mut self 修改自身
+//    fn resize(&mut self, new_size: u64){
+//     self.size = new_size;
+//    }
 
 
-   //为什么会出现使用.调用函数，也会出现使用::调用函数，有什么区别
-   //关联函数，不传self，类似静态方法
-   fn max_size() -> u64 {
-    1024 * 1024 *1024 
-   }
-}
+//    //为什么会出现使用.调用函数，也会出现使用::调用函数，有什么区别
+//    //关联函数，不传self，类似静态方法
+//    fn max_size() -> u64 {
+//     1024 * 1024 *1024 
+//    }
+// }

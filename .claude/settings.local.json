@@ -2,7 +2,9 @@
   "permissions": {
     "allow": [
       "Bash(cargo check *)",
-      "Bash(cargo run *)"
+      "Bash(cargo run *)",
+      "Bash(ls ~/.agents/skills/coding-tutor/scripts/ 2>/dev/null || echo \"NOT_FOUND\")",
+      "Read(//c/Users/LJT1218/.agents/skills/coding-tutor/**)"
     ]
   }
 }
