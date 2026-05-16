@@ -17,6 +17,14 @@ struct Args {
     #[arg(short = 'R')]
     recursive: bool,
 
+    ///按文件大小排序(从大到小)
+    #[arg(short = 'S')]
+    sort_by_size: bool,
+
+    ///按修改时间排序(有新到旧)
+    #[arg(short = 't')]
+    sort_by_time: bool,
+
     ///指定目录路径
     path: Option<String>,
 }
@@ -26,8 +34,15 @@ fn main() -> std::io::Result<()> {
     let long_format = args.long;
     let show_all = args.all;
     let dir = args.path.unwrap_or_else(|| ".".to_string());
+    let sort_by = if args.sort_by_size {
+        SortBy::Size
+    } else if args.sort_by_time {
+        SortBy::Time
+    } else {
+        SortBy::Name
+    };
 
-    list_dir(&dir, show_all, long_format, args.recursive)
+    list_dir(&dir, show_all, long_format, args.recursive, sort_by)
 }
 
 //格式化文件大小
@@ -54,6 +69,13 @@ enum EntryKind {
     Image,
     Audio,
     Other,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq)]
+enum SortBy {
+    Name,
+    Size,
+    Time,
 }
 
 trait FileDisplay {
@@ -104,7 +126,7 @@ fn ext_in(name: &str, exts: &[&str]) -> bool {
 }
 
 //展示文件的核心代码
-fn list_dir(dir: &str, show_all: bool, long_format: bool, recursive: bool) -> std::io::Result<()> {
+fn list_dir(dir: &str, show_all: bool, long_format: bool, recursive: bool, sort_by: SortBy) -> std::io::Result<()> {
     //打印当前目录
     println!("{} :", dir);
 
@@ -148,7 +170,17 @@ fn list_dir(dir: &str, show_all: bool, long_format: bool, recursive: bool) -> st
         .unwrap_or(8);
 
     //对文件进行排序，优先将文件夹放到上边
-    entries.sort_by(|a, b| b.2.is_dir().cmp(&a.2.is_dir()).then(a.0.cmp(&b.0)));
+    entries.sort_by(|a, b| {
+        let dir_cmp = b.2.is_dir().cmp(&a.2.is_dir());
+        match sort_by {
+            SortBy::Name => dir_cmp.then(a.0.cmp(&b.0)),
+            SortBy::Size => dir_cmp.then(b.3.len().cmp(&a.3.len())),
+            SortBy::Time => dir_cmp.then(
+                b.3.modified().unwrap_or(std::time::UNIX_EPOCH)
+                    .cmp(&a.3.modified().unwrap_or(std::time::UNIX_EPOCH))
+            ),
+        }
+    });
 
     //对文件类型分类后标注
     for (filename, size, file_type, meta, kind) in &entries {
@@ -165,7 +197,7 @@ fn list_dir(dir: &str, show_all: bool, long_format: bool, recursive: bool) -> st
         let display_name = kind.colorize(&filename);
 
         //获得并格式化文件的修改时间
-        if long_format {
+        if long_format || sort_by == SortBy::Time{
             let mtime = match meta.modified() {
                 Ok(time) => {
                     let elapsed = time.elapsed().unwrap_or_default();
@@ -207,7 +239,7 @@ fn list_dir(dir: &str, show_all: bool, long_format: bool, recursive: bool) -> st
             if file_type.is_dir() && filename != "." && filename != ".." {
                 println!("");
                 let sub_path = format!("{}/{}", dir.trim_end_matches('/'), filename);
-                list_dir(&sub_path, show_all, long_format, recursive)?;
+                list_dir(&sub_path, show_all, long_format, recursive, sort_by)?;
             }
         }
     }
