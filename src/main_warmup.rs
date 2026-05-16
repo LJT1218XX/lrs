@@ -280,75 +280,132 @@ fn main(){
     // }; //使用关联函数与这种形式都能对结构体初始化
     // f.print_info();
 
-    let light = TrafficLight::Red;
+    // let light = TrafficLight::Red;
 
-    let action = match light {
-        TrafficLight::Red => "停",
-        TrafficLight::Yellow => "等",
-        TrafficLight::Green => "行",
+    // let action = match light {
+    //     TrafficLight::Red => "停",
+    //     TrafficLight::Yellow => "等",
+    //     TrafficLight::Green => "行",
 
-    };
+    // };
 
-    println!("灯的状态: {}", action);
+    // println!("灯的状态: {}", action);
 
-    let home = IpAddr::V4(127, 0, 0, 1);
-    let loopback = IpAddr::V6(String::from("::1"));
+    // let home = IpAddr::V4(127, 0, 0, 1);
+    // let loopback = IpAddr::V6(String::from("::1"));
 
-    let addr_desc = match home {
-        IpAddr::V4(a,b ,c ,d ) => format!("IPv4: {}.{}.{}.{}", a, b, c, d),
-        IpAddr::V6(s) => format!("IPv6: {}", s),
-    };
+    // let addr_desc = match home {
+    //     IpAddr::V4(a,b ,c ,d ) => format!("IPv4: {}.{}.{}.{}", a, b, c, d),
+    //     IpAddr::V6(s) => format!("IPv6: {}", s),
+    // };
 
-    println!("{}", addr_desc);
+    // println!("{}", addr_desc);
 
-    let msg = Some(String::from("你好"));
+    // let msg = Some(String::from("你好"));
 
-    if let Some(content) = msg {
-        println!("有消息：{}", content);
-    } else {
-        println!("没有消息");
+    // if let Some(content) = msg {
+    //     println!("有消息：{}", content);
+    // } else {
+    //     println!("没有消息");
+    // }
+
+    // let fruit = Fruit::Orange;
+
+    // match fruit {
+    //     Fruit::Apple => {
+    //         println!("苹果")
+    //     },
+    //     Fruit::Orange => {
+    //         println!("橘子")
+    //     },
+    // };
+
+    // if let Fruit::Orange = fruit {
+    //     println!("是橘子");
+    // } else {
+    //     println!("不是橘子")
+    // }
+
+    let dog = Dog{name: String::from("小黄")};
+    let cat = Cat{name: String::from("小花")};
+    let bird = Bird{name: String::from("小啾")};
+
+    println!("{}", dog.greet());
+    make_sound(&dog);
+    println!("{}", cat.greet());
+    make_sound(&cat);
+    make_sound(&bird);
+
+    println!("dog: {}", dog.say_hello());
+    println!("cat: {}", cat.say_hello());
+
+}
+
+fn make_sound(animal: &impl Greet) {
+    println!("{}", animal.greet());
+}
+
+trait Greet {
+    fn greet(&self) -> String;
+
+    fn say_hello(&self) -> String {
+        format!("你好！")
     }
+}
 
-    let fruit = Fruit::Orange;
+struct Dog {
+    name: String,
+}
 
-    match fruit {
-        Fruit::Apple => {
-            println!("苹果")
-        },
-        Fruit::Orange => {
-            println!("橘子")
-        },
-    };
+struct Cat {
+    name: String,
+}
 
-    if let Fruit::Orange = fruit {
-        println!("是橘子");
-    } else {
-        println!("不是橘子")
+struct Bird {
+    name: String,
+}
+
+impl Greet for Dog {
+    fn greet(&self) -> String {
+        format!("{}说：汪汪汪！", self.name)
     }
+}
 
+impl Greet for Cat {
+    fn greet(&self) -> String {
+        format!("{}说：喵喵喵~", self.name)
+    }
+    fn say_hello(&self) -> String {
+        format!("{}说：你喵喵好", self.name)
+    }
+}
 
+impl Greet for Bird {
+    fn greet(&self) -> String {
+        format!("{}说：叽叽叽~", self.name)
+    }
 }
 
 
-#[derive(Debug)]
-enum TrafficLight {
-    Red,
-    Yellow,
-    Green,
-}
+// #[derive(Debug)]
+// enum TrafficLight {
+//     Red,
+//     Yellow,
+//     Green,
+// }
 
-#[derive(Debug)]
-enum IpAddr {
-    V4(u8, u8, u8, u8),
-    V6(String),
+// #[derive(Debug)]
+// enum IpAddr {
+//     V4(u8, u8, u8, u8),
+//     V6(String),
 
-}
+// }
 
-#[derive(Debug)]
-enum Fruit {
-    Apple,
-    Orange,
-}
+// #[derive(Debug)]
+// enum Fruit {
+//     Apple,
+//     Orange,
+// }
 
 // #[derive(Debug)]
 // struct FileItem{

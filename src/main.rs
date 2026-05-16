@@ -56,6 +56,32 @@ enum EntryKind {
     Other,
 }
 
+trait FileDisplay {
+    fn icon_char(&self) -> char;
+    fn colorize(&self, name: &str) -> String;    
+}
+
+impl FileDisplay for EntryKind {
+    fn icon_char(&self) -> char {
+        match self {
+            EntryKind::Directory => 'd',
+            EntryKind::Symlink => 'l',
+            _ => '-',
+        }
+    }
+
+    fn colorize(&self, name: &str) -> String {
+        match self {
+            EntryKind::Directory => name.blue(),
+            EntryKind::Symlink => name.cyan(),
+            EntryKind::Executable => name.green(),
+            EntryKind::Image => name.magenta(),
+            EntryKind::Audio => name.yellow(),
+            EntryKind::Other => name.normal(),
+        }.to_string()
+    }
+}
+
 fn classify(file_type: &std::fs::FileType, name:&str) -> EntryKind {
     if file_type.is_dir() {
         EntryKind::Directory
@@ -126,11 +152,7 @@ fn list_dir(dir: &str, show_all: bool, long_format: bool, recursive: bool) -> st
 
     //对文件类型分类后标注
     for (filename, size, file_type, meta, kind) in &entries {
-        let type_char = match kind {
-            EntryKind::Directory => 'd',
-            EntryKind::Symlink => 'l',
-            _ => '-',
-        };
+        let type_char = kind.icon_char();
 
         //文件夹不计算大小，以------代替
         let display_size = if file_type.is_dir() {
@@ -140,14 +162,7 @@ fn list_dir(dir: &str, show_all: bool, long_format: bool, recursive: bool) -> st
         };
 
         //根据文件类型动态变化文字颜色
-        let display_name = match kind {
-            EntryKind::Directory => filename.blue(),
-            EntryKind::Symlink => filename.cyan(),
-            EntryKind::Executable => filename.green(),
-            EntryKind::Image => filename.magenta(),
-            EntryKind::Audio => filename.yellow(),
-            EntryKind::Other => filename.normal(),
-        }.to_string();
+        let display_name = kind.colorize(&filename);
 
         //获得并格式化文件的修改时间
         if long_format {
